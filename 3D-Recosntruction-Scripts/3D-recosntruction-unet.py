@@ -35,9 +35,9 @@ def png2matrix(image_path):
         return None
 
 def matrix2xyz(matrix,output_xyz_filepath,index,mission,auv,mission_metadata):
-        sonar_configuration = json.load(open('sonar-configuration.json'))
+        sonar_configuration = json.load(open('/home/guilherme/Documents/SEE-Dataset/SEE-Synthetic-Data/sonar-configuration.json'))
         sonar_model=sonar_configuration["P900"]
-        auv_metadata=json.load(open(f"SEE-Dataset/Sonar-Dataset-mission-{mission}-P900/auv-{auv}/Meta-data/{index}.json"))
+        auv_metadata=json.load(open(f"/home/guilherme/Documents/SEE-Dataset/SEE-Synthetic-Data/Sonar-Dataset-mission-{mission}-P900/auv-{auv}/Meta-data/{index}.json"))
         radius, theta = matrix.shape
         try:
             with open(output_xyz_filepath, 'a') as outfile:
@@ -46,7 +46,7 @@ def matrix2xyz(matrix,output_xyz_filepath,index,mission,auv,mission_metadata):
                         if matrix[r][t]>0:
                             
                             rad = (r*sonar_model["RangeMax"])/sonar_model["RangeBins"] + sonar_model["RangeMin"]
-                            phi_= (matrix[r][t]-(sonar_model["Elevation"]/2))-45
+                            phi_= (matrix[r][t]-(sonar_model["Elevation"]/2))
                             theta_= ((t*(sonar_model["Azimuth"])/theta)-sonar_model["Azimuth"]/2) +auv_metadata["yaw"]
                             
                             
@@ -59,16 +59,16 @@ def matrix2xyz(matrix,output_xyz_filepath,index,mission,auv,mission_metadata):
 
 if __name__ == "__main__":
 
-    m=4
-    auv=12
-
-    with open(f"SEE-Dataset/mission{m}.csv", newline='') as f:
-        reader = csv.reader(f)
-        mission_metadata = list(reader)
-        mission_metadata.pop(0)
-
-    mission=mission_metadata[auv]
-    output_xyz_filepath=(f"unet-{m}-auv-{auv}.xyz")
-    for i in tqdm.tqdm(range(int(mission[-1])-1)):
-        image_file_path = (f"Data-unet/{m}-{auv}/{i}.png")
-        matrix2xyz(matrix=png2matrix(image_file_path),output_xyz_filepath=output_xyz_filepath,index=i,mission=m,auv=auv,mission_metadata=mission)
+    missions=[1]
+    auvs=[12,18,33]
+    for m in missions:
+        with open(f"/home/guilherme/Documents/SEE-Dataset/SEE-Synthetic-Data/mission{m}.csv", newline='') as f:
+            reader = csv.reader(f)
+            mission_metadata = list(reader)
+            mission_metadata.pop(0)
+        for auv in auvs:
+            mission=mission_metadata[auv]
+            output_xyz_filepath=(f"unet-multiview-{m}-auv-{auv}.xyz")
+            for i in tqdm.tqdm(range(int(mission[-1])-1)):
+                image_file_path = (f"/home/guilherme/Documents/Pytorch-UNet/Multiview-SEE/{m}-{auv}/{i}.png")
+                matrix2xyz(matrix=png2matrix(image_file_path),output_xyz_filepath=output_xyz_filepath,index=i,mission=m,auv=auv,mission_metadata=mission)

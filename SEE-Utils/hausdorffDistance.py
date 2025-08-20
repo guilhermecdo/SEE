@@ -48,17 +48,17 @@ def hausdorff_distance_cpu(point_cloud1, point_cloud2):
 
 if __name__ == "__main__":
     
-    missions=[1]
+    missions=[2,3,4]
     objs=[12,18,33]
 
     for obj in objs:
         for  m in missions:
             # Replace with your actual XYZ file paths
             file1 = (f"gt-{m}-auv-{obj}.xyz")
-            file2 = (f"{m}-auv-{obj}.xyz")
+            file2 = (f"unet-multiview-{m}-auv-{obj}.xyz")
 
-            point_cloud1 = load_xyz(file1,use_gpu=True)
-            point_cloud2 = load_xyz(file2,use_gpu=True)
+            point_cloud1 = load_xyz(file1)
+            point_cloud2 = load_xyz(file2)
 
             if point_cloud1 is not None and point_cloud2 is not None:
                 mean_h, rms_h = hausdorff_distance_cpu(point_cloud1, point_cloud2)

@@ -189,20 +189,23 @@ def join_images_side_by_side(image_paths, output_path="joined_image.png"):
         print(f"Error saving image: {e}")
 
 FILE_PREFIX=f"/home/guilherme/Documents/SEE-Dataset/"
+#FILE_PREFIX=f"/media/guilherme/SSD/coverage-mv/"
 a=0
 file_list_imgs=[]
 file_list_masks=[]
+objs=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,37,38,39]
+
 if __name__ == "__main__":
-    missions=[1,3]
+    missions=[2]
     #missions=[1]
     sonar_model="P900"
     for m in missions:
-        with open(f"{FILE_PREFIX}mission{m}.csv", newline='') as f:
-            reader = csv.reader(f)
-            mission_metadata = list(reader)
-            mission_metadata.pop(0)
+        #with open(f"{FILE_PREFIX}mission{m}.csv", newline='') as f:
+        #    reader = csv.reader(f)
+        #    mission_metadata = list(reader)
+        #    mission_metadata.pop(0)
         #mission_met=mission_metadata[0:1]    
-        for mission in mission_metadata:
+        for mission in objs:
             a=0
             #if (int(mission[6])-1)%3>0:
             #    file_list.clear()
@@ -210,20 +213,30 @@ if __name__ == "__main__":
             #        f"{FILE_PREFIX}Sonar-Dataset-mission-{m}-{sonar_model}-pitch/auv-{mission[0]}/GT-images/{int(mission[6])-3}.png",
             #        f"{FILE_PREFIX}Sonar-Dataset-mission-{m}-{sonar_model}-pitch/auv-{mission[0]}/GT-images/{int(mission[6])-4}.png"]
             #    stack_images_vertically(file_list,f"masks/{m}-{sonar_model}-{mission[0]}-{int((int(mission[6])-1)/3)+1}.png")
-            #a=0
+            #a=0{i}.png
             #file_list.clear()
 
-            for i in range(3*(int(mission[6]))):
+            for i in range(303):
                 #for a in range(3):
-                file_img=f"{FILE_PREFIX}Sonar-Dataset-mission-{m}-{sonar_model}-pitch/auv-{mission[0]}/Cartesian-images/{i}.png"
+                file_img=f"{FILE_PREFIX}coverage-mission-{m}-data-mv/Sonar-Dataset-mission-{m}-obj{mission}/{m}-sphere-0-data/Cartesian-images/{i}.png"
+                #file_img=f"{FILE_PREFIX}Sonar-Dataset-mission-{m}-{sonar_model}-pitch/auv-{mission[0]}/Cartesian-images/{i}.png"
                 file_list_imgs.append(file_img)
-                file_mask=f"{FILE_PREFIX}Sonar-Dataset-mission-{m}-{sonar_model}-pitch/auv-{mission[0]}/GT-images/{i}.png"
+                #file_mask=f"{FILE_PREFIX}Sonar-Dataset-mission-{m}-{sonar_model}-pitch/auv-{mission[0]}/GT-images/{i}.png"
+                file_mask=f"{FILE_PREFIX}coverage-mission-{m}-data-mv/Sonar-Dataset-mission-{m}-obj{mission}/{m}-sphere-0-data/GT-images/{i}.png"
                 file_list_masks.append(file_mask)
                 if len(file_list_imgs)==3:
-                    combine_images_pixelwise(file_list_imgs,f"imgs_combined/{m}-{sonar_model}-{mission[0]}-{a}.png")
-                    combine_images_pixelwise(file_list_masks,f"masks_combined/{m}-{sonar_model}-{mission[0]}-{a}.png")
-                    stack_images_vertically(file_list_imgs,f"imgs_stack/{m}-{sonar_model}-{mission[0]}-{a}.png")
-                    stack_images_vertically(file_list_masks,f"masks_stack/{m}-{sonar_model}-{mission[0]}-{a}.png")
+                    # combine_images_pixelwise(file_list_imgs,f"combined/imgs/{m}-{sonar_model}-{mission[0]}-{a}.png")
+                    # combine_images_pixelwise(file_list_masks,f"combined/masks/{m}-{sonar_model}-{mission[0]}-{a}.png")
+                    # stack_images_vertically(file_list_imgs,f"stack/imgs/{m}-{sonar_model}-{mission[0]}-{a}.png")
+                    # stack_images_vertically(file_list_masks,f"stack/masks/{m}-{sonar_model}-{mission[0]}-{a}.png")
+                    # join_images_side_by_side(file_list_imgs,f"sideByside/imgs/{m}-{sonar_model}-{mission[0]}-{a}.png")
+                    # join_images_side_by_side(file_list_masks,f"sideByside/masks/{m}-{sonar_model}-{mission[0]}-{a}.png")
+                    combine_images_pixelwise(file_list_imgs,f"/media/guilherme/SSD/unet-data/Coverage-Combined/imgs/coverage-combined-{m}-{sonar_model}-{mission}-{a}.png")
+                    combine_images_pixelwise(file_list_masks,f"/media/guilherme/SSD/unet-data/Coverage-Combined/masks/coverage-combined-{m}-{sonar_model}-{mission}-{a}.png")
+                    stack_images_vertically(file_list_imgs,f"/media/guilherme/SSD/unet-data/Coverage-Stacked/imgs/coverage-stack-{m}-{sonar_model}-{mission}-{a}.png")
+                    stack_images_vertically(file_list_masks,f"/media/guilherme/SSD/unet-data/Coverage-Stacked/masks/coverage-stack-{m}-{sonar_model}-{mission}-{a}.png")
+                    join_images_side_by_side(file_list_imgs,f"/media/guilherme/SSD/unet-data/Coverage-SideBySide/imgs/coverage-sideByside-{m}-{sonar_model}-{mission}-{a}.png")
+                    join_images_side_by_side(file_list_masks,f"/media/guilherme/SSD/unet-data/Coverage-SideBySide/masks/coverage-sideByside-{m}-{sonar_model}-{mission}-{a}.png")
                     file_list_imgs.clear()
                     file_list_masks.clear()
                     a=a+1
