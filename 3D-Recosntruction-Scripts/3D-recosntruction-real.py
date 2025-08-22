@@ -59,17 +59,17 @@ def matrix2xyz(matrix,output_xyz_filepath,mission_metadata):
 if __name__ == "__main__":
 
     #file_path=f""
-    file_path=f"/home/guilherme/Documents/SEE-Dataset/SEE-Real-Data/multi-view/imgs_combined_multiview/"
+    file_path=f"/home/guilherme/Documents/SEE-Dataset/SEE-Real-Data/single-view/imgs_elevateNET/"
 
-    with open(f"/home/guilherme/Documents/SEE-Dataset/SEE-Real-Data/multi-view/synchronized_summary.csv", newline='') as f:
+    with open(f"/home/guilherme/Documents/SEE-Dataset/SEE-Real-Data/single-view/synchronized_summary.csv", newline='') as f:
         reader = csv.reader(f)
         mission_metadata = list(reader)
         mission_metadata.pop(0)
 
-    output_xyz_filepath=(f"elevateNETR-realData-multiView.xyz")
+    output_xyz_filepath=(f"elevateNET-realData.xyz")
     #output_xyz_filepath=(f"elevateNETR-realData-singleView.xyz")
     
     for i in tqdm.tqdm(range(len(mission_metadata))):
-        image_file_path =f"{file_path}{mission_metadata[i][0]}.png"
+        image_file_path =f"{file_path}{mission_metadata[i][0]}"
         #print(mission_metadata[i][0])
         matrix2xyz(matrix=png2matrix(image_file_path),output_xyz_filepath=output_xyz_filepath,mission_metadata=mission_metadata[i])
